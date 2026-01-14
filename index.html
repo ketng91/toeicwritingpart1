@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TOEIC Writing - Part 1 Photo</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background-color: #fff8f0;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+}
+header {
+  background-color: #ffd6ba;
+  padding: 15px 20px;
+  font-weight: bold;
+  color: #7a4e3e;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+.header-left { position: absolute; left: 20px; }
+.header-left a {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 18px; color: #7a4e3e; text-decoration: none;
+}
+.header-center { font-size: 22px; font-weight: bold; }
+.top-select { display: flex; justify-content: flex-start; margin: 20px; width: 100%; }
+select {
+  padding: 8px 14px; font-size: 18px;
+  border-radius: 8px; border: 2px solid #a0e7e5;
+  background-color: #e3fdfd;
+}
+
+/* TIMER */
+#timerBox { margin: -10px auto 5px auto; font-size: 24px; text-align: center; }
+#timerBox button {
+  margin-left: 10px; padding: 6px 12px; font-size: 18px;
+  border-radius: 8px; border: none; cursor: pointer; background-color: #a0e7e5;
+}
+#timerBox button:hover { background-color: #ffb3ba; }
+
+/* MAIN CONTAINER */
+.exercise {
+  width: 90%;
+  margin: 20px auto;
+  font-size: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 25px;
+}
+.pic-side, .write-side {
+  background-color: #e3fdfd;
+  border-radius: 10px;
+  padding: 10px;
+  border: 2px solid #a0e7e5;
+}
+.pic-side { width: 380px; }
+.write-side { width: 420px; }
+.pic {
+  width: 100%; height: 230px;
+  background-color: #ddd;
+  border-radius: 8px;
+}
+.pic img {
+  width: 100%; height: 100%; border-radius: 8px; object-fit: cover;
+}
+.keywords {
+  font-size: 22px;
+  margin-top: 10px;
+  padding: 6px;
+  background: #fff;
+  border-radius: 6px;
+}
+textarea {
+  width: 95%;
+  height: 160px;
+  font-size: 20px;
+  font-family: "Arial", sans-serif;
+  border-radius: 8px;
+  padding: 10px;
+  resize: vertical;
+  border: 2px solid #a0e7e5;
+}
+.exercise-buttons { margin: 20px; }
+.exercise-buttons button {
+  padding: 10px 18px; font-size: 20px;
+  border-radius: 8px; border: none; margin-right: 15px;
+  cursor: pointer; background-color: #a0e7e5;
+}
+.exercise-buttons button:hover { background-color: #ffb3ba; }
+.result { font-weight: bold; font-size: 22px; margin-top: 10px; }
+footer { margin-top: 25px; }
+</style>
+</head>
+
+<body>
+<header>
+  <div class="header-left">
+    <a href="https://ketng91.github.io/lopanhthayket/">
+      <i class="fa-solid fa-house"></i> Lớp Anh thầy Kết
+    </a>
+  </div>
+  <div class="header-center">TOEIC Writing Part 1</div>
+</header>
+
+<div class="top-select">
+  <select id="exerciseList">
+    <option value="1">Test 1</option>
+    <option value="2">Test 2</option>
+    <option value="3">Test 3</option>
+    <option value="4">Test 4</option>
+    <option value="5">Test 5</option>
+
+
+  </select>
+</div>
+
+<div id="timerBox">
+  <span id="timer">08:00</span>
+  <button onclick="startTimer()">Start</button>
+  <button onclick="resetTimer()">Reset</button>
+</div>
+
+<div class="exercise">
+  <div class="pic-side">
+    <div class="pic"><img id="picDisplay" src=""></div>
+    <div class="keywords" id="keywordBox">keyword1, keyword2</div>
+  </div>
+
+  <div class="write-side">
+    <textarea id="answerBox" placeholder="Write your sentence..."></textarea>
+  </div>
+</div>
+
+<div class="exercise-buttons">
+  <button onclick="prevPic()">Back</button>
+  <button onclick="checkAnswer()">Check</button>
+  <button onclick="nextPic()">Next</button>
+  <button onclick="submitAnswers()">Submit</button>
+</div>
+
+<div class="result" id="result"></div>
+
+<footer>Chăm chỉ thì đậu!</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+<script>
+// ===== PHOTO DATA =====
+const tests = {
+  1: [
+    { img: "nhập link ảnh vào đây", keys:["park","bench"], answer:"A woman is sitting on a bench in the park." },
+    { img: "nhập link ảnh vào đây", keys:["office","computer"], answer:"A man is typing at his computer in an office." },
+    { img: "nhập link ảnh vào đây", keys:["street","crossing"], answer:"Several people are crossing the street." },
+    { img: "nhập link ảnh vào đây", keys:["market","fruit"], answer:"Vendors are selling fruit in an outdoor market." },
+    { img: "nhập link ảnh vào đây", keys:["restaurant","waiter"], answer:"A waiter is serving food at a restaurant." }
+  ]
+};
+
+let currentTest = 1;
+let index = 0;
+
+// NEW: lưu câu cho mỗi tranh
+let studentAnswers = ["", "", "", "", ""];
+
+// Khi đổi test
+document.getElementById("exerciseList").addEventListener("change", e=>{
+  currentTest = e.target.value;
+  index = 0;
+  studentAnswers = ["", "", "", "", ""]; 
+  loadPic();
+});
+
+// Load tranh
+function loadPic(){
+  const picData = tests[currentTest][index];
+  document.getElementById("picDisplay").src = picData.img;
+  document.getElementById("keywordBox").innerText = picData.keys.join(", ");
+
+  // Load lại câu đã nhập
+  document.getElementById("answerBox").value = studentAnswers[index];
+  document.getElementById("result").innerText = "";
+}
+
+// Next
+function nextPic(){
+  studentAnswers[index] = document.getElementById("answerBox").value;
+  if(index < tests[currentTest].length-1){
+    index++;
+    loadPic();
+  }
+}
+// Back
+function prevPic(){
+  studentAnswers[index] = document.getElementById("answerBox").value;
+  if(index > 0){
+    index--;
+    loadPic();
+  }
+}
+
+// Check
+function checkAnswer(){
+  let user = document.getElementById("answerBox").value.trim().toLowerCase();
+  let correct = tests[currentTest][index].answer.toLowerCase();
+  let resultBox = document.getElementById("result");
+
+  // Nếu trống
+  if(user.length === 0){
+    resultBox.style.color = "red";
+    resultBox.innerText = "❌ Please write your sentence!";
+    return;
+  }
+
+  // So khớp đơn giản: phải chứa 3 từ đầu tiên
+  let keyMatch = correct.split(" ").slice(0,3).every(w => user.includes(w));
+
+  if(keyMatch){
+    resultBox.style.color = "green";
+    resultBox.innerText = "✔ Correct!";
+    confetti({particleCount:100, spread:80});
+  } else {
+    resultBox.style.color = "red";
+    resultBox.innerHTML = `❌ Not quite.<br>👉 Correct answer:<br>${tests[currentTest][index].answer}`;
+  }
+}
+
+// Submit tải txt
+function submitAnswers(){
+  studentAnswers[index] = document.getElementById("answerBox").value;
+
+  let text = "";
+  studentAnswers.forEach((ans,i)=>{
+    text += `Picture ${i+1}:\n${ans}\n\n`;
+  });
+
+  const blob = new Blob([text], {type:"text/plain"});
+  const url = URL.createObjectURL(blob);
+
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = "TOEIC_Writing_Answers.txt";
+  link.click();
+
+  URL.revokeObjectURL(url);
+}
+
+// TIMER = 8:00
+let timerInterval;
+let remaining = 480;
+
+function startTimer(){
+  clearInterval(timerInterval);
+  timerInterval=setInterval(()=>{
+    remaining--;
+    if(remaining<=0){clearInterval(timerInterval);}
+    updateTimer();
+  },1000);
+}
+function resetTimer(){
+  clearInterval(timerInterval);
+  remaining=480;
+  updateTimer();
+}
+function updateTimer(){
+  let m=Math.floor(remaining/60);
+  let s=remaining%60;
+  document.getElementById("timer").innerText=(m<10?"0":"")+m+":"+(s<10?"0":"")+s;
+}
+
+loadPic();
+updateTimer();
+</script>
+</body>
+</html>
