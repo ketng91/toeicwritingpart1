@@ -36,6 +36,9 @@ select {
   background-color: #e3fdfd;
 }
 
+
+
+
 /* TIMER */
 #timerBox { margin: -10px auto 5px auto; font-size: 24px; text-align: center; }
 #timerBox button {
@@ -71,7 +74,7 @@ select {
   width: 100%; height: 100%; border-radius: 8px; object-fit: cover;
 }
 .keywords {
-  font-size: 22px;
+  font-size: 23px;
   margin-top: 10px;
   padding: 6px;
   background: #fff;
@@ -80,7 +83,8 @@ select {
 textarea {
   width: 95%;
   height: 160px;
-  font-size: 20px;
+  font-size: 22px;
+  color: #F63049;
   font-family: "Arial", sans-serif;
   border-radius: 8px;
   padding: 10px;
@@ -96,6 +100,40 @@ textarea {
 .exercise-buttons button:hover { background-color: #ffb3ba; }
 .result { font-weight: bold; font-size: 22px; margin-top: 10px; }
 footer { margin-top: 25px; }
+
+
+/* Nút chung */
+.exercise-buttons button {
+  padding: 10px 18px; font-size: 20px;
+  border-radius: 8px; border: none; margin-right: 15px;
+  cursor: pointer;
+}
+
+/* Màu riêng từng nút */
+.exercise-buttons button:nth-child(1) { background-color: #a0e7e5; }  /* Back */
+.exercise-buttons button:nth-child(3) { background-color: #a0e7e5; }  /* Next */
+
+/* Check nút xanh lá */
+.exercise-buttons button:nth-child(2) {
+  background-color: #32CD32;
+  color: white;
+}
+.exercise-buttons button:nth-child(2):hover {
+  background-color: #28a428;
+}
+
+/* Submit nút xanh dương */
+.exercise-buttons button:nth-child(4) {
+  background-color: #1E90FF;
+  color: white;
+}
+.exercise-buttons button:nth-child(4):hover {
+  background-color: #187bdb;
+}
+
+
+
+
 </style>
 </head>
 
