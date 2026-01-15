@@ -238,11 +238,16 @@ let index = 0;
 let studentAnswers = ["", "", "", "", ""];
 
 // Khi đổi test
+// Khi đổi test
 document.getElementById("exerciseList").addEventListener("change", e=>{
   currentTest = e.target.value;
   index = 0;
   studentAnswers = ["", "", "", "", ""]; 
   loadPic();
+
+  clearInterval(timerInterval);   // <-- thêm dòng này
+  remaining = 480;                // <-- thêm dòng này
+  updateTimer();                  // <-- giữ đồng hồ hiển thị đúng
 });
 
 // Load tranh
