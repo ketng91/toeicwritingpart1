@@ -193,12 +193,25 @@ footer { margin-top: 25px; }
 // ===== PHOTO DATA =====
 const tests = {
   1: [
-    { img: "T1image1.jpg", keys:["park","bench"], answer:"A woman is sitting on a bench in the park." },
-    { img: "T1image2.jpg", keys:["office","computer"], answer:"A man is typing at his computer in an office." },
-    { img: "T1image3.jpg", keys:["street","crossing"], answer:"Several people are crossing the street." },
-    { img: "T1image4.jpg", keys:["market","fruit"], answer:"Vendors are selling fruit in an outdoor market." },
-    { img: "T1image5.jpg", keys:["restaurant","waiter"], answer:"A waiter is serving food at a restaurant." }
+    { img: "T1images/T1image1.jpg", keys:["park","bench"], answer:"A woman is sitting on a bench in the park." },
+    { img: "T1images/T1image2.jpg", keys:["in","computer"], answer:"A man is typing at his computer in an office." },
+    { img: "T1images/T1image3.jpg", keys:["street","cross"], answer:"Several people are crossing the street." },
+    { img: "T1images/T1image4.jpg", keys:["outdoor","fruit"], answer:"Vendors are selling fruit in an outdoor market." },
+    { img: "T1images/T1image5.jpg", keys:["where","food"], answer:"The waiter is carrying a plate of food to the table where two women are sitting." }
+  ],
+  2: [
+    { img: "T2images/T2image1.jpg", keys:["grass","in"], answer:"People are sitting on the grass in the park." },
+    { img: "T2images/T2image2.png", keys:["present","colleague"], answer:"A woman is presenting her report TO colleagues in the meeting room." },
+    { img: "T2images/T2image3.png", keys:["parents","child"], answer:"The parents are hanging a picture on the wall, while their child is standing by the table." },
+    { img: "T2images/T2image4.png", keys:["backpack","hand"], answer:"Two elderly people, holding hands and carrying backpacks, walk down the road." },
+    { img: "T2images/T2image5.png", keys:["while","store"], answer:"A waiter is serving food at a restaurant." }
   ]
+
+
+
+
+
+
 };
 
 let currentTest = 1;
@@ -265,7 +278,7 @@ function checkAnswer(){
     confetti({particleCount:100, spread:80});
   } else {
     resultBox.style.color = "red";
-    resultBox.innerHTML = `❌ Not quite.<br>👉 Correct answer:<br>${tests[currentTest][index].answer}`;
+    resultBox.innerHTML = `👉 Sample answer:<br>${tests[currentTest][index].answer}`;
   }
 }
 
